@@ -5,27 +5,7 @@ from optparse import OptionParser
 import unitcell
 import cssr
 import pdb
-
-bondpairs = [   ('C','Zn', 1.0),
-                ('C','O', 1.5),
-                ('C','N', 1.5),
-                ('C','H', 1.2),
-                ('C','C', 1.5),
-                ('O','Zn', 1.0),
-                ('N','O', 1.5),
-                ('H','O', 1.2),
-                ('O','O', 1.5),
-                ('N','Zn', 2.3),
-                ('H','N', 1.2),
-                ('N','N', 1.5),
-                ('H','Zn', 1.0),
-                ('H','H', 1.0),
-                ('Zn','Zn', 1.0) ]
-
-bondlengths = {}
-for pair in bondpairs:
-    bondlengths['%s-%s' % (pair[0],pair[1])] = pair[2]
-    bondlengths['%s-%s' % (pair[1],pair[0])] = pair[2]
+from bonds import bondlengths
 
 def main():
     
