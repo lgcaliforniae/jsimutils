@@ -35,7 +35,7 @@ def main():
       
     if ext == 'cssr':
         atoms, uc = cssr.load_cssr(structure_file)
-        natoms =len(atoms)
+        natoms = len(atoms)
         distance = unitcell.abc_distance_func(uc)
     else:
         print "Please provide a .cssr"

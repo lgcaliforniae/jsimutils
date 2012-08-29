@@ -20,7 +20,8 @@ def load_cssr(cssrfile):
 
 def convert_to_xyz(cssrfile):
     with open(cssrfile, mode='rt') as f:
-        data = [ line.rstrip('\n').split() for line in f.readlines() ]    
+        data = [ line.rstrip('\n').split() for line in f.readlines() ]
+    data = [ x for x in data if len(x) > 0 ]
     uc = {}
     uc['length'] = tuple([ float(x) for x in data[0][0:3] ])
     uc['angle'] = tuple([ float(x) for x in data[1][0:3] ])
