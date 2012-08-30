@@ -7,7 +7,13 @@ import jsimutils
 import cssr
 
 def balance(library, structure_file):
+    """Balance the charge of a structure.
         
+    Given a structure in COTA cssr format and a set of preliminary charges,
+    adjust the charges by a small delta to ensure the structure is 
+    electrically neutral.
+    
+    """    
     if not os.path.isfile(structure_file):
         print "please supply a structure file!"
         return 2
@@ -69,15 +75,17 @@ def balance(library, structure_file):
     
     # Print final summary
     total_charge = decimal.Decimal(0.0)
+    final_charges = {}
     print 'New charges'
     for t,n,q,r in zip(types, stoichiometry, charges, resid_delta):
         qprime = decimal.Decimal(q + delta - r).quantize(decimal_place)
         print '%14s %8.4f x %4d = %12.6f' % (t,qprime,n,n*qprime)
         total_charge += n*qprime    
+        final_charges[t] = qprime
     
     print '=============================================\ntotal charge: %31.6f' % total_charge
     
-    return 0
+    return final_charges
 
 if __name__ == '__main__':
     parser = OptionParser(usage="usage %prog [options] filename", version="%prog 0.1")
@@ -88,5 +96,8 @@ if __name__ == '__main__':
                                  help="library of charges [default: cbac]")
     (options, args) = parser.parse_args()	
     r = balance(options.library, os.path.abspath(args[0]))
-    sys.exit(r)
+    if isinstance(r, {}):
+        sys.exit(0)
+    else:
+        sys.exit(r)
 
