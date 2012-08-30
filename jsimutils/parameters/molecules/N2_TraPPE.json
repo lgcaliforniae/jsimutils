@@ -1,0 +1,6 @@
+
+{
+    "_comment": "parameters from Potoff and Siepmann, AIChE J., 47, 1676-1682 (2001)",
+    "N_n2": {"sigma": 3.31, "epsilon": 36.0, "charge": -0.482,  "mass": 14.007},
+    "N_com": {"charge": 0.964, "mass": 0.0}
+}

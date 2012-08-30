@@ -1,0 +1,15 @@
+
+{
+    "_comment": "parameters converted from Rappe et al. JACS, 114, 10024-10035 (1992)",
+    "H":  {"sigma": 2.571, "epsilon": 22.156 },
+    "C":  {"sigma": 3.431, "epsilon": 52.873 },
+    "N":  {"sigma": 3.261, "epsilon": 34.745 },
+    "O":  {"sigma": 3.118, "epsilon": 30.213 },
+    "Cl": {"sigma": 3.516, "epsilon": 114.307},
+    "Fe": {"sigma": 2.594, "epsilon": 6.546  },
+    "Co": {"sigma": 2.559, "epsilon": 7.050  },
+    "Cu": {"sigma": 3.114, "epsilon": 2.518  },
+    "Zn": {"sigma": 2.462, "epsilon": 62.441 },
+    "Cd": {"sigma": 2.537, "epsilon": 114.811},
+    "In": {"sigma": 3.976, "epsilon": 301.630}
+}
