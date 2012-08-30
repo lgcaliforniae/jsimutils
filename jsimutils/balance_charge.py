@@ -6,27 +6,14 @@ import decimal
 import cPickle
 import cssr
 
-def main():
-    parser = OptionParser(usage="usage %prog [options] filename", version="%prog 0.1")
-
-    parser.add_option("-p", "--precision", action="store",
-                                           dest="precision",
-                                           type="int",
-                                           default=3,
-                                           help="decimal places to balance charge at [default: 3]")
-
-    parser.add_option("-L", "--library", action="store",
-                                         dest="library",
-                                         type="string",
-                                         default="zif_charges.pkl",
-                                         help="pickle library of charges")
-
-    (options, args) = parser.parse_args()	
-    
-    structure_file = os.path.abspath(args[0])
-    
+def balance(library_file, structure_file):
+        
     if not os.path.isfile(structure_file):
         print "please supply a structure file!"
+        return 2
+
+    if not os.path.isfile(library_file):
+        print "please supply a library file!"
         return 2
     
     # configure decimal math
@@ -35,7 +22,7 @@ def main():
     decimal_place = decimal.Decimal('1.000')
     
     # load charge library
-    with open(options.library, mode='r') as f:
+    with open(library_file, mode='r') as f:
         master_charges = cPickle.load(f)
     
     # load the structure
@@ -73,18 +60,16 @@ def main():
         qprime = decimal.Decimal(q+delta).quantize(decimal_place)
         residual += n*(qprime)
     
+    resid_delta = [ decimal.Decimal(0.000) for t in types ]
     if decimal.Decimal('0').compare(residual) is not decimal.Decimal('0'):
         # check to see if the charge can be evenly divided by any particular pseudo atom type
-        resid_delta = []
-        for t,n in zip(types, stoichiometry):
+        for (i,n) in enumerate(stoichiometry):
             x = residual/n
-            if not x.same_quantum(decimal_place):
-                x = decimal.Decimal(0.000)
+            if  x.same_quantum(decimal_place):
+                resid_delta[i] = x                  
+                break
             else:
-                pass
-            resid_delta.append(x)
-    else:
-        resid_delta = [ decimal.Decimal(0.000) for t in types ]
+                pass        
     
     # Print final summary
     total_charge = decimal.Decimal(0.0)
@@ -99,8 +84,13 @@ def main():
     return 0
 
 if __name__ == '__main__':
-	r = main()
-	sys.exit(r)
-
-
+    parser = OptionParser(usage="usage %prog [options] filename", version="%prog 0.1")
+    parser.add_option("-L", "--library", action="store",
+                                 dest="library",
+                                 type="string",
+                                 default="zif_charges.pkl",
+                                 help="pickle library of charges")
+    (options, args) = parser.parse_args()	
+    r = balance(options.library, os.path.abspath(args[0]))
+    sys.exit(r)
 
