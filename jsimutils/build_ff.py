@@ -14,6 +14,9 @@ def build(fwk_ff, fwk_charges, molecules, structure_file):
     
     """
     charges = balance_charge.balance(fwk_charges, structure_file)
+    if charges == 3:
+        print "not enough charges defined to continue, exting"
+        return 3
 
     # load the structure
     atoms, uc = cssr.load_cssr(structure_file)
