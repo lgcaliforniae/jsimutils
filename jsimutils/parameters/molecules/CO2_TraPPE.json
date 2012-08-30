@@ -1,6 +1,6 @@
 
 {
     "_comment": "parameters from Potoff and Siepmann, AIChE J., 47, 1676--682 (2001)",
-    "C_co2": {"sigma": 2.80, "epsilon": 27.0, "charge": 0.70,  "mass": 12.011},
-    "O_co2": {"sigma": 3.05, "epsilon": 79.0, "charge": -0.35, "mass": 15.999}
+    "C_co2": {"sigma": 2.80, "epsilon": 27.0, "charge": 0.70,  "mass": 12.011, "element": "C"},
+    "O_co2": {"sigma": 3.05, "epsilon": 79.0, "charge": -0.35, "mass": 15.999, "element": "O"}
 }

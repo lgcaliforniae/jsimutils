@@ -1,5 +1,5 @@
 
 {
     "_comment": "parameters from Potoff and Siepmann, AIChE J., 47, 1676-1682 (2001)",
-    "CH4_sp3": {"sigma": 3.73, "epsilon": 148.0, "charge": 0.0,  "mass": 16.043},
+    "CH4_sp3": {"sigma": 3.73, "epsilon": 148.0, "charge": 0.0,  "mass": 16.043, "element": "C"},
 }
