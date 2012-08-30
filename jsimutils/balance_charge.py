@@ -3,39 +3,35 @@ import sys
 import os.path
 from optparse import OptionParser
 import decimal
-import cPickle
+import jsimutils
 import cssr
 
-def balance(library_file, structure_file):
+def balance(library, structure_file):
         
     if not os.path.isfile(structure_file):
         print "please supply a structure file!"
         return 2
-
-    if not os.path.isfile(library_file):
-        print "please supply a library file!"
-        return 2
     
     # configure decimal math
-    #decimal.getcontext().prec = options.precision
     decimal.getcontext().prec = 8
     decimal_place = decimal.Decimal('1.000')
     
     # load charge library
-    with open(library_file, mode='r') as f:
-        master_charges = cPickle.load(f)
+    master_charges = jsimutils.load_charges(library)
+    if master_charges is None:
+        return 2
     
     # load the structure
     atoms, uc = cssr.load_cssr(structure_file)
 
-    atom_names = [ atom['name'] for atom in atoms ]
+    atom_names = [ atom['name'].split('_', 1)[-1] for atom in atoms ]
     types = set(atom_names)
     
     stoichiometry = [ atom_names.count(key) for key in types ]
     charges = []
     for key in types:
         try:
-            charges.append(decimal.Decimal(master_charges[key]['charge']))
+            charges.append(decimal.Decimal(master_charges[key]))
         except KeyError:
             print 'atom type %s not found!' % key
             return 3
@@ -88,8 +84,8 @@ if __name__ == '__main__':
     parser.add_option("-L", "--library", action="store",
                                  dest="library",
                                  type="string",
-                                 default="zif_charges.pkl",
-                                 help="pickle library of charges")
+                                 default="cbac",
+                                 help="library of charges [default: cbac]")
     (options, args) = parser.parse_args()	
     r = balance(options.library, os.path.abspath(args[0]))
     sys.exit(r)
