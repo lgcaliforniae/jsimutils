@@ -62,9 +62,9 @@ def build(fwk_ff, fwk_charges, molecules, structure_file):
         f.write('# number of defined interactions\n%d\n' % (len(atom_types)+len(mol_ff)) )
         f.write('# type interaction\n')
         for t,e in zip(atom_types, elements):
-            f.write('%-14s   lennard-jones   %.4f  %.4f\n' % (t, ff[e]['sigma'], ff[e]['epsilon']))
+            f.write('%-14s   lennard-jones   %.4f  %.4f\n' % (t, ff[e]['epsilon'], ff[e]['sigma']))
         for (t,v) in mol_ff.items():
-            f.write('%-14s   lennard-jones   %.4f  %.4f\n' % (t, v['sigma'], v['epsilon']))
+            f.write('%-14s   lennard-jones   %.4f  %.4f\n' % (t, v['epsilon'], v['sigma']))
         f.write('# general mixing rule for Lennard-Jones\nLorentz-Berthelot\n')
     
     with open(os.path.join(fwk,'force_field.def'), mode='wt') as f:
