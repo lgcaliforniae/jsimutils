@@ -47,7 +47,7 @@ def write_cssr(cssrfile, atoms, uc):
     lines.append('%38.3f %8.3f %8.3f\n' % uc['length'])
     lines.append('%24.3f %8.3f %8.3f  SPGR = 1 P 1        OPT = 1\n' % uc['angle'])
     lines.append('%d    0\n' % len(atoms))
-    lines.append('0 named with ffname.py\n   :  void\n')
+    lines.append('0 named with ffname.py :  comment\n')
     for (n,atom) in enumerate(atoms, start=1):
         lines.append('%6d%16s%10.5f%10.5f%10.5f  0  0  0  0  0  0  0  0  0.00\n' % (n, atom['name'], atom['abc'][0], atom['abc'][1], atom['abc'][2]) )
 
