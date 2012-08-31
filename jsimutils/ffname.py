@@ -7,30 +7,7 @@ import cssr
 import pdb
 from bonds import bondlengths
 
-def main():
-    
-    parser = OptionParser(usage="usage %prog [options] filename", version="%prog 0.1")
-
-    parser.add_option("-r", "--rcut", action="store",
-                                        dest="rcut",
-                                        type="float",
-                                        default=3.0,
-                                        help="rough filter cuf off [default: 3.0 Ang.]")
-
-    parser.add_option("-p", "--prefix", action="store",
-                                        dest="prefix",
-                                        type="string",
-                                        default="mof",
-                                        help="material type prefix [default: mof]")
-
-    (options, args) = parser.parse_args()
-    
-    if len(args) == 0:
-        print "please supply a structure file!"
-        return 2
-    
-    structure_file = args[0]
-    
+def name_structure(rcut, prefix, structure_file):
     (root, ext) = structure_file.split('.')
       
     if ext == 'cssr':
@@ -57,10 +34,10 @@ def main():
                 atoms[j]['r'] = [ (r,i) ]
 
     for i in range(0,natoms):
-        R = [ (r,atoms[j]['elem']) for (r,j) in atoms[i]['r'] if r < options.rcut ]
+        R = [ (r,atoms[j]['elem']) for (r,j) in atoms[i]['r'] if r < rcut ]
         bonded = [ elem for (r, elem) in R if r < bondlengths['%s-%s' % (atoms[i]['elem'], elem) ] ]
         bonded.sort()
-        atoms[i]['name'] = '%s_%s_%s' % (options.prefix, atoms[i]['elem'], ''.join(bonded))
+        atoms[i]['name'] = '%s_%s_%s' % (prefix, atoms[i]['elem'], ''.join(bonded))
 
     cssr.write_cssr('named_%s.cssr' % root, atoms, uc)
     
@@ -68,6 +45,26 @@ def main():
 
 
 if __name__ == '__main__':
-    r = main()
+    parser = OptionParser(usage="usage %prog [options] filename", version="%prog 0.1")
+
+    parser.add_option("-r", "--rcut", action="store",
+                                        dest="rcut",
+                                        type="float",
+                                        default=3.0,
+                                        help="rough filter cuf off [default: 3.0 Ang.]")
+
+    parser.add_option("-p", "--prefix", action="store",
+                                        dest="prefix",
+                                        type="string",
+                                        default="mof",
+                                        help="material type prefix [default: mof]")
+
+    (options, args) = parser.parse_args()
+    
+    if len(args) == 0:
+        print "please supply a structure file!"
+        sys.exit(2)
+    
+    r = name_structure(options.rcut, options.prefix, args[0])
     sys.exit(r)
 

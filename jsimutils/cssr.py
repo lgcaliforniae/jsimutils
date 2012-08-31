@@ -1,4 +1,5 @@
 
+from optparse import OptionParser
 import unitcell
 
 def load_cssr(cssrfile):
@@ -55,3 +56,13 @@ def write_cssr(cssrfile, atoms, uc):
 
     return 0
 
+
+if __name__ == '__main__':
+    parser = OptionParser(usage="usage %prog [options] filename", version="%prog 0.1")
+    parser.add_option("--convert", action="store_true", dest="convert", default=False,
+                      help="library of charges [default: cbac]")
+    (options, args) = parser.parse_args()
+    if options.convert:
+        convert_to_xyz(args[0])
+    else:
+        pass
