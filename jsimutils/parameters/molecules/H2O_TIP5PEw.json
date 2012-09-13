@@ -1,0 +1,7 @@
+
+{
+    "_comment": "parameters from S. W. Rick, J. Chem. Phys., 120, 6085-6093 (2004)",
+    "O_tip5pew": {"sigma": 3.097, "epsilon": 89.633, "charge": 0.0,  "mass": 15.9994, "element": "O"},
+    "H_tip5pew": {"charge": 0.241, "mass": 1.008, "element": "H"},
+    "L_tip5pew": {"charge": -0.241, "mass": 0.0, "element": "-"}
+}

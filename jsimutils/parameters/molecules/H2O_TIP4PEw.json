@@ -1,0 +1,7 @@
+
+{
+    "_comment": "parameters from Horn et al., J Chem Phys, 120, 9665-9678 (2004)",
+    "O_tip4pew": {"sigma": 3.16435, "epsilon": 81.954, "charge": 0.0,  "mass": 15.9994, "element": "O"},
+    "H_tip4pew": {"charge": 0.52422, "mass": 1.008, "element": "H"},
+    "M_tip4pew": {"charge": -1.04844, "mass": 0.0, "element": "-"}
+}

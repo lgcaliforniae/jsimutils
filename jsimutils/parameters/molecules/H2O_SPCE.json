@@ -1,0 +1,6 @@
+
+{
+    "_comment": "parameters from Berendsen, Grigera, and Straatsma, J. Phys. Chem., 91, 6269-6271 (1987)",
+    "O_spce": {"sigma": 3.1656, "epsilon": 378.197, "charge": -0.8476,  "mass": 15.9994, "element": "O"},
+    "H_spce": {"charge": 0.4238, "mass": 1.008, "element": "H"}
+}
