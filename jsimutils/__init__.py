@@ -16,6 +16,7 @@ __email__ = 'jaswish@berkeley.edu'
 
 import os.path
 import json
+from math import sqrt
 modpath = os.path.dirname(__file__)
 
 atomic_masses = {"H": 1.008, "He": 4.002602, "Li": 6.94, "Be": 9.012182, "B": 10.81, "C": 12.011, 
@@ -88,3 +89,17 @@ def load_force_field(ff_name):
         pass
     return ff
 
+def mean(array):
+    """Returns the arthimetic mean of a list of numbers.
+    """
+    return float(sum(array))/len(array)
+
+def stddev(array):
+    """Returns ths sample standard deviation of a list of numbers.
+    """
+    xbar = mean(array)
+    xsq = sum([ (x-xbar)**2 for x in array])
+    return sqrt(xsq/(len(array)-1))
+
+
+    
