@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 
+use List::Util qw(sum);
+
 
 my @components;
 my $n_ucs = 1;
@@ -10,6 +12,12 @@ my @loadings;
 # 1 - running
 # 2 - completed
 my $job_state = 0; 
+
+# equilibration flag
+# 0 - during equilibration cycles
+# 1 - after equilibration cycles
+my $equil_state = 0;
+my @temp_loadings;
 
 # end flag
 # 0 - before final loadings
@@ -86,6 +94,20 @@ while (<STDIN>) {
         $job_state = 1;
     }
 
+    elsif (/^Current cycle: +0/)
+    {
+        $equil_state = 1;
+        for $i ( 0 .. $#components ) 
+        {
+            push @temp_loadings, [];
+        }
+    }
+
+    elsif (/Component +(\d) +\S+, current number of molecules: +(\d+)/ && $equil_state == 1)
+    {
+        push @{ $temp_loadings[$1] }, $2;
+    }
+
     elsif (/Finishing simulation/)
     {
         $job_state = 2;
@@ -123,23 +145,59 @@ elsif ($job_state == 1 || $job_state == 2)
     for ($i=0; $i<=$#components; $i++)
     {
         $c = $components[$i];
+        my $thisloading = 0;
+        my $thiserror = 0;
+        
         open FILE, ">>$fwk_name\-$temperature\_K\-$c->{name}-$c->{type}.csv" or die $!;
-
+        
         if ($job_state == 2)
         {
-            $uc = sprintf("%.5e", $loadings[$i]->{"avg"}/$n_ucs);
-            $uce = sprintf("%.5e", $loadings[$i]->{"err"}/$n_ucs);
-            $kg = sprintf("%.5e", $loading_to_kg*($loadings[$i]->{"avg"}));
-            $kge = sprintf("%.5e", $loading_to_kg*($loadings[$i]->{"err"}));
-            print FILE "$pressure,$c->{molfrac},$c->{compress},$c->{parfug},$uc,$uce,$kg,$kge\n";
+            $thisloading = $loadings[$i]->{"avg"};
+            $thiserror = $loadings[$i]->{"err"};
         }
 
         else 
         {
-            print FILE "$pressure,$c->{molfrac},$c->{compress},$c->{parfug},incomplete\n";
+            my %results = &blockavg($temp_loadings[$i]);
+            $thisloading = $results{"avg"};
+            $thiserror = $results{"err"};
         }
-            
+        
+        $uc = sprintf("%.5e", $thisloading/$n_ucs);
+        $uce = sprintf("%.5e", $thiserror/$n_ucs);
+        $kg = sprintf("%.5e", $loading_to_kg*($thisloading));
+        $kge = sprintf("%.5e", $loading_to_kg*($thiserror));
+        print FILE "$pressure,$c->{molfrac},$c->{compress},$c->{parfug},$uc,$uce,$kg,$kge,$job_state\n";
+    
         close FILE;
     }
+}
+
+sub blockavg
+{
+    my @values = @{$_[0]};
+    my $remainder = ($#values+1) % 5;
+    my $nperblock = ($#values+1-$remainder)/5;
+    my @means;
+    for $i (0..4) {
+        my $start = $i*$nperblock;
+        my $end = ($i+1)*$nperblock - 1;
+        if ($i == 4)
+        {
+            $end = $#values;
+        }
+        my @data = @values[$start..$end];
+        push @means, ((sum @data)/($#data+1));
+    }
+    
+    my $mu = ((sum @means)/($#means+1));
+    
+    my @variance;
+    for $i (0 .. 4) {
+        push @variance, ($means[$1]-$mu)*($means[$1]-$mu);
+    }
+    my $sigma = sqrt ((sum @variance)/5);
+    
+    return ("avg" => $mu, "err" => $sigma);
 }
 
