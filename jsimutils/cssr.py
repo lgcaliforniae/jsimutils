@@ -8,11 +8,13 @@ def load_cssr(cssrfile):
     uc = {}
     uc['length'] = tuple([ float(x) for x in lines[0].rstrip('\n').split()[0:3] ])
     uc['angle']= tuple([ float(x) for x in lines[1].rstrip('\n').split()[0:3] ])
+    abctoxyz = unitcell.abctoxyz_func(uc)
     atoms = []
     for line in lines[4:]:
         try:
             [n, elem, a, b, c, rest] = line.split(None, 5)
-            new = {'name': elem, 'elem': None, 'abc': (float(a),float(b),float(c))}
+            abc = (float(a),float(b),float(c))
+            new = {'name': elem, 'elem': None, 'abc': abc, 'xyz': abctoxyz(abc)}
             atoms.append(new)
         except:
             pass

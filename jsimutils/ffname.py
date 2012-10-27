@@ -13,7 +13,7 @@ def name_structure(rcut, prefix, structure_file):
     if ext == 'cssr':
         atoms, uc = cssr.load_cssr(structure_file)
         natoms = len(atoms)
-        distance = unitcell.abc_distance_func(uc)
+        distance = unitcell.xyz_distance_func(uc)
     else:
         print "Please provide a .cssr"
         return 2
@@ -23,7 +23,7 @@ def name_structure(rcut, prefix, structure_file):
 
     for i in range(0,natoms-1):
         for j in range(i+1,natoms):
-            r = distance(atoms[i]['abc'], atoms[j]['abc'])
+            r = distance(atoms[i]['xyz'], atoms[j]['xyz'])
             try:
                 atoms[i]['r'].append( (r,j) )
             except KeyError:
